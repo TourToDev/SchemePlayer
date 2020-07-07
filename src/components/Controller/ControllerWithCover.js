@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
-
+import PauseIcon from '@material-ui/icons/Pause';
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -41,6 +41,9 @@ export default function MediaControlCard({store}) {
   const state = store.getState()
   const viewsState = state.playerViews
   const currentSongStatus = viewsState.currentSongStatus
+
+  
+
   return (
     <Card className={classes.root}>
       <div className={classes.details}>
@@ -57,7 +60,7 @@ export default function MediaControlCard({store}) {
             {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
           </IconButton>
           <IconButton aria-label="play/pause" onClick={()=>{store.dispatch({type:'changePlayingStatus'})}}>
-            <PlayArrowIcon className={classes.playIcon} />
+            {!state.playerControl.isPlaying? <PlayArrowIcon className={classes.playIcon} /> : <PauseIcon className={classes.playIcon}/>}
           </IconButton>
           <IconButton aria-label="next" onClick={() => store.dispatch({type:'changeSongId',payload:currentSongStatus.id+1})}>
             {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
@@ -66,7 +69,7 @@ export default function MediaControlCard({store}) {
       </div>
       <CardMedia
         className={classes.cover}
-        image="/static/images/cards/live-from-space.jpg"
+        image={currentSongStatus.picsrc}
         title="Live from space album cover"
       />
     </Card>
